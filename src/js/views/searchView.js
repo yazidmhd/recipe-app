@@ -1,4 +1,4 @@
-import { elements } from './base';
+import { elements, elementUris } from './base';
 
 export const getInput = () => elements.searchInput.value;
 
@@ -10,6 +10,15 @@ export const clearResults = () => {
     elements.searchResList.innerHTML = '';
     elements.searchResPages.innerHTML = '';
 };
+
+export const highlightedSelected = id => {
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(el => {
+        el.classList.remove('results__link--active');
+    });
+
+    document.querySelector(`a[href*="#${id}"]`).classList.add('results__link--active');
+}
 
 //private functions
 const limitRecipeTitle = (title, limit = 17) => {
@@ -29,16 +38,15 @@ const limitRecipeTitle = (title, limit = 17) => {
 }
 
 const renderRecipe = recipe => {
-    const recipeID = recipe.uri.split('#')[1];
     const markup = `
         <li>
-            <a class="results__link" href="${recipeID}">
+            <a class="results__link" href="#${recipe.id}">
                 <figure class="results__fig">
-                    <img src="${recipe.image}" alt="Test">
+                    <img src="${elementUris.baseUri}${recipe.image}" alt="Test">
                 </figure>
                 <div class="results__data">
-                    <h4 class="results__name">${limitRecipeTitle(recipe.label)}</h4>
-                    <p class="results__author">${recipe.source}</p>
+                    <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
+                    <p class="results__author">${recipe.title}</p>
                 </div>
             </a>
         </li>
